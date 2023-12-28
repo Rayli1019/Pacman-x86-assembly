@@ -363,6 +363,7 @@ endm
 ```
 ### Cover generation
 On the internet, there are specialized websites for converting BMP files into 8-bit arrays. The resulting images are very refined, but the drawback is that they occupy a considerable amount of memory.
+
 Website: [link](https://mischianti.org/images-to-byte-array-online-converter-cpp-arduino/#google_vignette)
 ```
 sumcover proc
@@ -394,4 +395,6 @@ Again:
     ret 
 sumcover  endp
 ```
+### Game screen
+
 
