@@ -25,5 +25,21 @@ Ghost4 will chased the position which can let Pacman be the middle of the Ghost2
 <p align="center"><img src="4.png" width="300" height="225"></p>
 
 ## How to find the best direction
->[!CAUTION]
->Due to the difficulty in accomplish recursive. So we use other method to find the direction. Althought the result may not be the best solution. But this is the most easy way to find out the direction
+>[!NOTE]
+>Due to assembly is difficult to accomplish recursive. So we use other method to find the direction. Althought the result may not be the best solution. But this is the most easy way to find out the direction.
+### Basic principle
+<p align="center"><img src="5.png" width="300" height="225"></p>
+
+1. First will compare wheather the Ghost is on the intersection.
+2. Compare which direction it doesn't have wall infront. And it can't walk backward.
+3. Compute which direction it can get the shortest distance.
+>[!NOTE]
+>You can find out all intersection on the map and label as a different number in previous. This can reduce CPU usage.
+
+### Other algorithm make Ghost more smarter
+Because breifly using Ghost2, Ghost3, Ghost4 mode we find out the Ghost may pass the Pacman in a near distance. It's really stupid. So ghost and Pacman smaller than a certain value the Ghost will use Ghost1 mode to chase the Pacman.
+
+But just pursuit can lead to a situation where all ghosts are very close behind the Pacman, making it impossible to catch the Pacman. Moreover, because they are so close to the Pacman, the calculated direction remains the same. This allows for continuous circling to score points easily. 
+
+Therefore, we added a condition: if the pursuit algorithm is executed more than a certain number of times, the ghost will reverse direction to prevent a situation where the ghosts and the Pacman form a straight line. Additionally, as time progresses, the ghosts will move faster.
+
