@@ -240,10 +240,70 @@ Ghost_move endp
 ```
 ### File Read
 We can find out whether there is any file exist. If there isn't any file exist. We will create one and show the basic rule of the game.
-
+```
+checkscore macro
+    local check_ascii1,check_ascii2,check_ascii3
+    push ax
+    openfile ;Open file
+    readfile ;Read file
+    pop ax
+    mov ax,0
+    add al,file_score[2] ;Storage digit
+    cmp al,96 ;Compare whether is A~F
+    jna check_ascii1
+    sub al,39
+    check_ascii1:
+    sub al,30h
+    mov bl,file_score[1] ;Storage ten digit
+    cmp bl,96 ;Compare whether is A~F
+    jna check_ascii2
+    sub bl,39
+    check_ascii2:
+    sub bl,30h
+    shl bl,4
+    add al,bl
+    mov bl,file_score[0] ;Storage hundred digit
+    cmp bl,96 ;Compare whether is A~F
+    jna check_ascii3
+    sub bl,39
+    check_ascii3:
+    sub bl,30h
+    add ah,bl
+    mov highest_score,ax ;Mov highestsocre to highest_score valable
+    pusha
+    closefile
+    popa
+endm
+```
 ### Play Music
 Because if only simple images are displayed, it might feel a bit dull, so we added a sound component. When the sprite is caught by a ghost, it will emit a sound to alert the player that they have died. Similarly, at the end of the game, there will be a reminder that the game has concluded. Due to constraints in the program segment, it wasn't possible to compose a full song, so it will only play a simple tune like Mi-Re-Do.
 
+Music frequency [here](http://muruganad.com/8086/8086-assembly-language-program-to-play-sound-using-pc-speaker.html)
+```
+play_sound  macro
+    local pause1, pause2
+    mov     al, 182  ;Enable Timer
+    out     43h, al        
+    mov     ax, 4530 ;Set frequency  
+    out     42h, al        
+    mov     al, ah    
+    out     42h, al 
+    in      al, 61h  ;Start Timer                               
+    or      al, 00000011b   
+    out     61h, al         
+    mov     bx, 25   ;Control how long it will ring      
+pause1:
+    mov     cx, 6553 ;Control how long it will ring
+pause2:
+    dec     cx
+    jne     pause2
+    dec     bx
+    jne     pause1
+    in      al, 61h  ;Stop timer
+    and     al, 11111100b   
+    out     61h, al         
+endm
+```
 ### Timing Execution
 Because both the elves and ghosts require a stable clock during movement, simply using delays can result in unstable intervals between movements. A stable clock is needed. Initially, we used a timer interrupt, but the timing duration was too short for our use. Therefore, we eventually utilized the system time reading from int 21h for timing purposes.
 
