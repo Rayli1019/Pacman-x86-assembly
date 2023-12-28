@@ -307,3 +307,91 @@ endm
 ### Timing Execution
 Because both the elves and ghosts require a stable clock during movement, simply using delays can result in unstable intervals between movements. A stable clock is needed. Initially, we used a timer interrupt, but the timing duration was too short for our use. Therefore, we eventually utilized the system time reading from int 21h for timing purposes.
 
+### Small object Generation
+Due to the small size and single color of some graphics, `summanypixel` is used to horizontally generate a row of pixels.
+
+### Big object Generation
+Because if all large objects use a single large array to store data, the Data segment will quickly run out of space. 
+
+Therefore, we employ a proportional scaling algorithm that allows the maze to use less memory while still being suitable for calculations.
+```
+sunmap macro 
+    local m1,m2,m3,m4,m5
+    pushA
+    mov ax,30 ;array's row
+m1:
+    push ax
+    mov bx,15 ;Zoom size
+m2:
+    push bx
+    mov cx,28 ;array's column
+m3:
+    push cx
+    matrix_space x1,y1,0,0;return matrix[x1][y1] (0 or 1)
+    mov dx,15 ;Zoom size
+m4:
+    push dx
+    WrPixel y2,x2,0h ;
+    cmp ax,1
+    jne m5
+    WrPixel y2,x2,1001b
+m5:
+    inc y2 
+    pop dx
+    dec dx
+    cmp dx,0
+    jne m4
+    inc y1
+    pop cx
+    dec cx
+    cmp cx,0
+    jne m3
+    inc x2
+    mov y1,0
+    mov y2,0
+    pop bx 
+    dec bx
+    cmp bx,0
+    jne m2
+    inc x1
+    mov y1,0
+    pop ax
+    dec ax
+    cmp ax,0
+    jne m1
+endm
+```
+### Cover generation
+On the internet, there are specialized websites for converting BMP files into 8-bit arrays. The resulting images are very refined, but the drawback is that they occupy a considerable amount of memory.
+Website: [link](https://mischianti.org/images-to-byte-array-online-converter-cpp-arduino/#google_vignette)
+```
+sumcover proc
+    local temp:WORD
+    Mov BX, 0
+Again:
+    INC BX
+    Mov Al, cover[BX];Mov 1byte data to AL
+    Mov CX, 8 ;Need to shift 8 times to get correct data
+    while_loo_proc:
+        push cx
+        .if AL >= 128 ;Test the most left digit is one or two
+            INC Y5
+        .elseif AL < 128
+            WrPixel Y5, X5, 1111b; if is 0 write 1111b
+            INC Y5
+        .endif
+        Shl Al, 1
+        .if X5 >= 480 && Y5 >= 640 ;y5 is X ,x5 is Y, if finish JMP out
+            JMP break
+        .elseif Y5 >= 640 ;If it's at the bottom change to other line
+            Mov Y5, 0
+            INC X5
+        .endif
+       pop cx 
+    loop while_loo_proc
+    JMP Again
+    break:
+    ret 
+sumcover  endp
+```
+
