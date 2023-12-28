@@ -45,6 +45,54 @@ But just pursuit can lead to a situation where all ghosts are very close behind 
 
 Therefore, we added a condition: if the pursuit algorithm is executed more than a certain number of times, the ghost will reverse direction to prevent a situation where the ghosts and the Pacman form a straight line. Additionally, as time progresses, the ghosts will move faster.
 
+code
+```
+matrix_return Ghost2_X, Ghost2_Y
+cmp AX, 7 ;判斷是否在路口
+je Ghost2_pivotal_point
+jne Ghost2_pivotal_point_PASS
+Ghost2_pivotal_point: 
+    ;追擊模式超過一定次數，方向要反向
+    .if Ghost2_near_time > 10 && Ghost2_dir == 0 
+        Mov Ghost2_dir, 2
+        Mov Ghost2_near_time, 0
+        JMP Ghost2_pivotal_point_PASS
+    .elseif Ghost2_near_time > 10 && Ghost2_dir == 1
+        Mov Ghost2_dir, 3
+        Mov Ghost2_near_time, 0
+        JMP Ghost2_pivotal_point_PASS
+    .elseif Ghost2_near_time > 10 && Ghost2_dir == 2
+        Mov Ghost2_dir, 0
+        Mov Ghost2_near_time, 0
+        JMP Ghost2_pivotal_point_PASS
+    .elseif Ghost2_near_time > 10 && Ghost2_dir == 3
+        Mov Ghost2_dir, 1
+        Mov Ghost2_near_time, 0
+        JMP Ghost2_pivotal_point_PASS
+    .endif
+    ;計算小精靈到鬼的直線距離
+    Push5_parameter Pacman_X, Pacman_Y, Ghost2_X, Ghost2_Y, 10
+    call Distance
+    cmp AX, Ghost_max
+    jae Ghost2_far
+    jb Ghost2_near
+    Ghost2_near:
+        ;使用Ghost1模式進行追擊
+        INC Ghost2_near_time
+        Ghost1_to_Direction Ghost2_X, Ghost2_Y, Ghost2_dir, Pacman_X, Pacman_Y
+        call Ghost_move
+        Mov Ghost2_dir, AX
+        JMP Ghost2_pivotal_point_PASS
+    Ghost2_far:  
+    ;預判小精靈前方8格的位置
+    Mov Ghost2_near_time, 0
+    Ghost2_to_Direction 
+    call Ghost_move ;回傳方向
+    Mov Ghost2_dir, AX
+Ghost2_pivotal_point_PASS:
+Ghost2_Position_change ;改變Ghost2位置
+```
+
 ### File Read
 We can find out whether there is any file exist. If there isn't any file exist. We will create one and show the basic rule of the game.
 
