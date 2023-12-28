@@ -2,6 +2,7 @@
 
 course:微算機概論實習 陸敬互教授
 
+student:李勁磊(B11107048)、蕭達鍵(B11107046)
 ## Game rule
 
 ## Code feature
@@ -395,6 +396,31 @@ Again:
     ret 
 sumcover  endp
 ```
-### Game screen
+## Game screen
 
+### Game cover
+<p align="center"><img src="8.png" width="850" height="630"></p>
 
+### Gameplay screen
+<p align="center"><img src="7.png" width="850" height="630"></p>
+<p align="center"><img src="6.png" width="850" height="630"></p>
+
+### Game Over
+<p align="center"><img src="9.png" width="850" height="630"></p>
+
+## Impression
+### Name: Lichinglei B11107048
+In this project, my main responsibility was the algorithmic part, such as the algorithm for the sprite's path, keyboard input, sprite movement, timer interrupt, music playback, and proportional zooming algorithm.
+
+The most challenging aspect of this project was determining how the ghost should chase the sprite. The calculation process required writing in assembly language. While using other high-level languages would allow us to use recursion to calculate the optimal path, implementing this in assembly language was difficult. Debugging was also challenging, so I iteratively optimized the algorithm and eventually came up with the current algorithm that includes a chasing mode and occasional reversals.
+
+Since we wanted to implement some special features, we often needed to search for information online when encountering issues. For example, for timer interrupt, we used the `int 21h` to retrieve system time and calculate time differences. To create the starting screen, we used a website that could convert BMP files into arrays.
+
+Sometimes, when encountering bugs, we had to search online for information, and we found assembly language examples for Linux. Asking ChatGPT often led to incorrect answers or a lack of relevant information during online searches.
+
+After completing this program, I gained a deeper understanding of assembly language. Previous labs in class only covered a small part, but this project required us to integrate and apply all the knowledge from class and learn new concepts independently. Even though I stayed up until 3 a.m. coding every day, the feeling of seeing the program run gave me a tremendous sense of accomplishment and fulfillment.
+
+### Name: XIAODAJIAN B11107046
+In this project, my main responsibility was the generation of graphics, such as the map, sprites, ghosts, score calculation, and the end screen. Although this part was relatively simple, it proved to be cumbersome in practice. Initially, we thought of using a binary representation (1s and 0s) to define the map. However, when it came to drawing the array, I had to draw a 30x28 map, which tested my patience. When drawing smaller objects, I had to calculate their positions, and if a mistake occurred, it was not easy to identify. Additionally, when I used ax and bx to draw a row of pixels (summanypixel), there was a point at a certain distance from the original point that seemed strange. When I used cx and dx, this issue didn't occur, and to this day, I haven't figured out if it's related to stack returns.
+
+I also want to express my gratitude to my teammate who developed the algorithm for the ghosts. During our discussions, he mentioned the main parts of the algorithm, such as measuring the distance from the ghost to the corners and comparing it to the player's distance to the corners, and determining the target positions for the ghosts. Although I had a general understanding, implementing these concepts in assembly language was challenging. Additionally, I was responsible for file-related programming tasks, such as file reading, writing, and creation. While this part wasn't difficult to code, I faced a challenge because VSCode couldn't read the file during the first attempt. It was only after consulting my teammate that we discovered the file was being created in a directory outside of VSCode's execution window, and once we addressed that, I successfully completed the relevant program.
