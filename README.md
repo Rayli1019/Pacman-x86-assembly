@@ -5,6 +5,8 @@ course:微算機概論實習 陸敬互教授
 student:李勁磊 Lichinglei (B11107048)、蕭達鍵 XIAODAJIAN (B11107046)
 ## Game rule
 
+In our game, there are four ghosts that actively pursue the Pacman. The player's objective is to control the Pacman to evade the pursuit of these ghosts. If a ghost successfully catches the Pacman, a life, located in the lower right corner, will be reduced. If all three lives be exhausted, the game will conclude. Your score is determined by the number of steps the Pacman successfully takes in the game.
+
 ## Code feature
 #### Ghost how to chased the pacman
 In our game we have four ghosts, each ghost have it's unique algorithm. The following provides a brief introduction to each ghost's individual characteristics.
