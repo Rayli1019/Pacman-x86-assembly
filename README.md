@@ -2,29 +2,29 @@
 
 course:微算機概論實習 陸敬互教授
 
-student:李勁磊(B11107048)、蕭達鍵(B11107046)
+student:李勁磊 Lichinglei (B11107048)、蕭達鍵 XIAODAJIAN (B11107046)
 ## Game rule
 
 ## Code feature
 #### Ghost how to chased the pacman
-In our game we have four ghost, each ghost have it's unique algorithm. Below is the brief introduction.
+In our game we have four ghosts, each ghost have it's unique algorithm. The following provides a brief introduction to each ghost's individual characteristics.
 
-#### Ghost1 algorithm  
+#### Ghost1 algorithm
 Ghost1 will find the shortest route to chased to Pacman.
 <p align="center"><img src="1.png" width="300" height="225"></p>
 
 
 #### Ghost2 algorithm  
-Ghost2 will chased 8 space infront of the Pacman.
+Ghost2 is designed to pursue Pacman by seeking the position 8 spaces ahead of Pacman's current location.
 <p align="center"><img src="2.png" width="300" height="225"></p>
 
 
 #### Ghost3 algorithm  
-Ghost3 will chased the position which can let Pacman be the middle of the Ghost1 and Ghost3
+Ghost3 is programmed to pursue a position that ensures Pacman is positioned in the middle between Ghost1 and Ghost3.
 <p align="center"><img src="3.png" width="300" height="225"></p>
 
 #### Ghost4 algorithm  
-Ghost4 will chased the position which can let Pacman be the middle of the Ghost2 and Ghost4
+Ghost4 is programmed to pursue a position that ensures Pacman is positioned in the middle between Ghost2 and Ghost4.
 <p align="center"><img src="4.png" width="300" height="225"></p>
 
 ## How to find the best direction
@@ -33,20 +33,20 @@ Ghost4 will chased the position which can let Pacman be the middle of the Ghost2
 ### Basic principle
 <p align="center"><img src="5.png" width="300" height="225"></p>
 
-1. First will compare wheather the Ghost is on the intersection.
-2. Compare which direction it doesn't have wall infront. And it can't walk backward.
-3. Compute which direction it can get the shortest distance.
+1. Initially, the algorithm checks whether the Ghost is currently positioned at an intersection.
+2. Following that, it evaluates the available directions by identifying which direction does not have a wall in front, while also ensuring that the Ghost cannot move backward.
+3. Lastly, compute which direction can find out shortest distance.
 >[!NOTE]
 >You can find out all intersection on the map and label as a different number in previous. This can reduce CPU usage.
 
 ### Other algorithm make Ghost more smarter
-Because breifly using Ghost2, Ghost3, Ghost4 mode we find out the Ghost may pass the Pacman in a near distance. It's really stupid. So ghost and Pacman smaller than a certain value the Ghost will use Ghost1 mode to chase the Pacman.
+Due to the observed issue with Ghost2, Ghost3, and Ghost4 modes potentially allowing the Ghosts to pass Pacman closely. So when the distance between the Ghost and Pacman is smaller than a predetermined value, Ghost1 mode is activated for pursuit.
 
-But just pursuit can lead to a situation where all ghosts are very close behind the Pacman, making it impossible to catch the Pacman. Moreover, because they are so close to the Pacman, the calculated direction remains the same. This allows for continuous circling to score points easily. 
+To solve the problem of all ghosts closely trailing Pacman and causing an infinite chase loop, a new condition has been introduced. If the pursuit algorithm executes more than a specified number of times, the ghost will reverse direction. This modification prevents ghosts and Pacman form a straight line.
 
-Therefore, we added a condition: if the pursuit algorithm is executed more than a certain number of times, the ghost will reverse direction to prevent a situation where the ghosts and the Pacman form a straight line. Additionally, as time progresses, the ghosts will move faster.
+Additionally, to add complexity and challenge as the game progresses, the ghosts' speed increases over time, introducing the difficulty for players.
 
-Because Ghost2, Ghost3, Ghost4 mode is familiar. So below is Ghost2 algorithm.
+Because Ghost2, Ghost3, Ghost4 mode is familiar. So I will focus on presenting the algorithm for Ghost2.
 ### Ghost2 main code
 ```
 matrix_return Ghost2_X, Ghost2_Y
@@ -161,38 +161,38 @@ Ghost_move proc
     Mov AX, G_dir
     Mov pointer, AX
 Compare_Whether_Same_PASS:
-    matrix_space GX, GY, -1, 0;return matrix[GX-1][GY] value
+    matrix_space GX, GY, -1, 0 ;return matrix[GX-1][GY] value
     cmp AX, 0 ;compare whether there is space
     je UP_have_Space
     jne UP_have_Space_PASS
 UP_have_Space:
-    Mov Direction_usable[0], 1 ;mark this direction as usable
+    Mov Direction_usable[0], 1 ;Mark this direction as usable
 UP_have_Space_PASS:
 
-    matrix_space GX, GY, 0, 1;return matrix[GX][GY+1] value
+    matrix_space GX, GY, 0, 1 ;return matrix[GX][GY+1] value
     cmp AX, 0 ;compare whether there is space
     je RIGHT_have_Space
     jne RIGHT_have_Space_PASS
 RIGHT_have_Space:
-    Mov Direction_usable[1], 1 ;mark this direction as usable
+    Mov Direction_usable[1], 1 ;Mark this direction as usable
 RIGHT_have_Space_PASS:
 
-    matrix_space GX, GY, 1, 0;return matrix[GX+1][GY] value
+    matrix_space GX, GY, 1, 0 ;return matrix[GX+1][GY] value
     cmp AX, 0 ;compare whether there is space
     je DOWN_have_Space
     jne DOWN_have_Space_PASS
 DOWN_have_Space:
-    Mov Direction_usable[2], 1 ;mark this direction as usable
+    Mov Direction_usable[2], 1 ;Mark this direction as usable
 DOWN_have_Space_PASS:
 
-    matrix_space GX, GY, 0, -1;return matrix[GX][GY-1] value
+    matrix_space GX, GY, 0, -1 ;return matrix[GX][GY-1] value
     cmp AX, 0 ;compare whether there is space
     je LEFT_have_Space
     jne LEFT_have_Space_PASS
 LEFT_have_Space:
-    Mov Direction_usable[3], 1 ;mark this direction as usable
+    Mov Direction_usable[3], 1 ;Mark this direction as usable
 LEFT_have_Space_PASS:
-    Mov BX, pointer ;don't go reverse direction
+    Mov BX, pointer ;Don't go reverse direction
     ADD BX, 2 
     cmp BX, 3
     ja pointer_too_big
@@ -203,7 +203,7 @@ pointer_not_too_big:
     Mov Direction_usable[BX], 0
     Mov AX, 0
     Mov CX, 0
-Loop_compare_shortest_distance:;Compute the best direction
+Loop_compare_shortest_distance: ;Compute the best direction
         Mov BX, CX
         cmp Direction_usable[BX], 1
         je if_direction_usable
@@ -240,6 +240,7 @@ Loop_compare_shortest_distance:;Compute the best direction
 Ghost_move endp
 ```
 ### File Read
+
 We can find out whether there is any file exist. If there isn't any file exist. We will create one and show the basic rule of the game.
 ```
 checkscore macro
@@ -277,7 +278,7 @@ checkscore macro
 endm
 ```
 ### Play Music
-Because if only simple images are displayed, it might feel a bit dull, so we added a sound component. When the sprite is caught by a ghost, it will emit a sound to alert the player that they have died. Similarly, at the end of the game, there will be a reminder that the game has concluded. Due to constraints in the program segment, it wasn't possible to compose a full song, so it will only play a simple tune like Mi-Re-Do.
+Because if only simple images are displayed, it might feel a bit boring, so we added a sound component. When the sprite is caught by a ghost, it will play a sound to alert the player that they have died. Similarly, at the end of the game, there will be a reminder that the game has ended. Due to constraints in the program segment, it wasn't possible to compose a full song, so it will only play a simple tune like Mi-Re-Do.
 
 Music frequency [here](http://muruganad.com/8086/8086-assembly-language-program-to-play-sound-using-pc-speaker.html)
 ```
@@ -306,15 +307,15 @@ pause2:
 endm
 ```
 ### Timing Execution
-Because both the elves and ghosts require a stable clock during movement, simply using delays can result in unstable intervals between movements. A stable clock is needed. Initially, we used a timer interrupt, but the timing duration was too short for our use. Therefore, we eventually utilized the system time reading from int 21h for timing purposes.
+Because both the Pacman and Ghosts require a stable clock during movement, simply using delays can result in unstable intervals between movements. A stable clock is needed. Initially, we used a timer interrupt, but the timing duration was too short for our use. Therefore, we eventually utilized the system time reading from `int 21h` for timing purposes.
 
 ### Small object Generation
 Due to the small size and single color of some graphics, `summanypixel` is used to horizontally generate a row of pixels.
 
 ### Big object Generation
-Because if all large objects use a single large array to store data, the Data segment will quickly run out of space. 
+If all large objects use a single large array to store data, the Data segment will quickly run out of space. 
 
-Therefore, we employ a proportional scaling algorithm that allows the maze to use less memory while still being suitable for calculations.
+Therefore, we write a proportional scaling algorithm that allows the maze to use less memory while still being suitable for calculations.
 ```
 sunmap macro 
     local m1,m2,m3,m4,m5
@@ -409,7 +410,7 @@ sumcover  endp
 <p align="center"><img src="9.png" width="850" height="630"></p>
 
 ## Impression
-### Name: Lichinglei B11107048
+### Name: (李勁磊)Lichinglei B11107048
 In this project, my main responsibility was the algorithmic part, such as the algorithm for the sprite's path, keyboard input, sprite movement, timer interrupt, music playback, and proportional zooming algorithm.
 
 The most challenging aspect of this project was determining how the ghost should chase the sprite. The calculation process required writing in assembly language. While using other high-level languages would allow us to use recursion to calculate the optimal path, implementing this in assembly language was difficult. Debugging was also challenging, so I iteratively optimized the algorithm and eventually came up with the current algorithm that includes a chasing mode and occasional reversals.
@@ -420,7 +421,7 @@ Sometimes, when encountering bugs, we had to search online for information, and 
 
 After completing this program, I gained a deeper understanding of assembly language. Previous labs in class only covered a small part, but this project required us to integrate and apply all the knowledge from class and learn new concepts independently. Even though I stayed up until 3 a.m. coding every day, the feeling of seeing the program run gave me a tremendous sense of accomplishment and fulfillment.
 
-### Name: XIAODAJIAN B11107046
+### Name: (蕭達鍵)XIAODAJIAN B11107046
 In this project, my main responsibility was the generation of graphics, such as the map, sprites, ghosts, score calculation, and the end screen. Although this part was relatively simple, it proved to be cumbersome in practice. Initially, we thought of using a binary representation (1s and 0s) to define the map. However, when it came to drawing the array, I had to draw a 30x28 map, which tested my patience. When drawing smaller objects, I had to calculate their positions, and if a mistake occurred, it was not easy to identify. Additionally, when I used ax and bx to draw a row of pixels (summanypixel), there was a point at a certain distance from the original point that seemed strange. When I used cx and dx, this issue didn't occur, and to this day, I haven't figured out if it's related to stack returns.
 
 I also want to express my gratitude to my teammate who developed the algorithm for the ghosts. During our discussions, he mentioned the main parts of the algorithm, such as measuring the distance from the ghost to the corners and comparing it to the player's distance to the corners, and determining the target positions for the ghosts. Although I had a general understanding, implementing these concepts in assembly language was challenging. Additionally, I was responsible for file-related programming tasks, such as file reading, writing, and creation. While this part wasn't difficult to code, I faced a challenge because VSCode couldn't read the file during the first attempt. It was only after consulting my teammate that we discovered the file was being created in a directory outside of VSCode's execution window, and once we addressed that, I successfully completed the relevant program.
